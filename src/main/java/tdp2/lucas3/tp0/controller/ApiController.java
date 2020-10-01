@@ -7,7 +7,7 @@ import tdp2.lucas3.tp0.dto.WeatherResponseDto;
 import tdp2.lucas3.tp0.service.WeatherService;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.http.HttpStatus;
-import tdp2.lucas3.tp0.exceptions.CityNotFoundException;
+import tdp2.lucas3.tp0.exceptions.ApiRequestException;
 
 @RestController
 public class ApiController {
@@ -42,7 +42,7 @@ public class ApiController {
         weather = weatherService.getWeather(city);
       } catch (HttpClientErrorException ex) {
         if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-          throw new CityNotFoundException(city);
+          throw new ApiRequestException("City not found: "+ city);
         }
       }
       WeatherDto response =  new WeatherDto();

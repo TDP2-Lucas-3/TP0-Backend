@@ -1,9 +1,23 @@
 package tdp2.lucas3.tp0.exceptions;
 
-public class CityNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import java.time.ZonedDateTime;
 
-    public CityNotFoundException(String name) {
-        super("City not found: " + name);
+public class CityNotFoundException {
+    private final String message;
+    private final ZonedDateTime timestamp;
+
+
+    public CityNotFoundException(String message) {
+      this.message = message;
+      this.timestamp = ZonedDateTime.now();
     }
 
+    public String getMessage() {
+      return message;
+    }
+
+    public ZonedDateTime getTimestamp() {
+      return timestamp;
+    }
 }
