@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import tdp2.lucas3.tp0.dto.WeatherDto;
 import tdp2.lucas3.tp0.dto.WeatherResponseDto;
 import tdp2.lucas3.tp0.service.WeatherService;
+import tdp2.lucas3.tp0.exceptions.CityNotFoundException;
 
 @RestController
 public class ApiController {
@@ -32,5 +33,18 @@ public class ApiController {
     //Probar el endpoint con POSTMAN
     //Vas a necesitar Java 8 instalado
     //Opcional: Agregar un campo a la respuesta del REST mapeado del servicio del clima
+    @GetMapping("/clima")
+    public WeatherDto getWeather(@RequestParam("city") String city) {
+      WeatherResponseDto weather = null;
+      try {
+        weather = weatherService.getWeather(city);
+      } catch (CityNotFoundException ex) {
+        throw ex;
+      }
+      WeatherDto response =  new WeatherDto();
+      response.setRain(weather.getClouds().getAll());
+      response.setTemp(weather.getMain().getTemp());
+      return response;
+    }
 
 }
