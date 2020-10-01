@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import tdp2.lucas3.tp0.dto.WeatherDto;
 import tdp2.lucas3.tp0.dto.WeatherResponseDto;
 import tdp2.lucas3.tp0.service.WeatherService;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.http.HttpStatus;
 import tdp2.lucas3.tp0.exceptions.CityNotFoundException;
 
 @RestController
@@ -38,8 +40,10 @@ public class ApiController {
       WeatherResponseDto weather = null;
       try {
         weather = weatherService.getWeather(city);
-      } catch (CityNotFoundException ex) {
-        throw ex;
+      } catch (HttpClientErrorException ex) {
+        if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+          throw new CityNotFoundException(city);
+        }
       }
       WeatherDto response =  new WeatherDto();
       response.setRain(weather.getClouds().getAll());
