@@ -35,4 +35,20 @@ public class WeatherServiceTests {
         Assert.assertEquals(weather.getClouds().getAll(), weather2.getClouds().getAll());
         Assert.assertEquals(weather.getMain().getTemp(), weather2.getMain().getTemp());
     }
+
+    @Test
+    public void givenMockingIsDoneByMockito_whenGetIsCalledWithAparameter_shouldReturnMockedObject() {
+      String host = "http://api.openweathermap.org/data/2.5/weather?q=";
+      final String url = host + "Buenos Aires" + "&appid=9ce6c563f796ae0c59d72487ddd6c265&units=metric";
+
+      WeatherResponseDto weather = new WeatherResponseDto("0", "17");
+      Mockito
+              .when(restTemplate.getForObject(
+                      url, WeatherResponseDto.class)).thenReturn(weather);
+
+      WeatherResponseDto weather2 = wService.getWeather("Buenos Aires");
+      Assert.assertEquals(weather.getClouds().getAll(), weather2.getClouds().getAll());
+      Assert.assertEquals(weather.getMain().getTemp(), weather2.getMain().getTemp());
+
+    }
 }
