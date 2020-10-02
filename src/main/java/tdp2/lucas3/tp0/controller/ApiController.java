@@ -35,8 +35,8 @@ public class ApiController {
     //Probar el endpoint con POSTMAN
     //Vas a necesitar Java 8 instalado
     //Opcional: Agregar un campo a la respuesta del REST mapeado del servicio del clima
-    @GetMapping("/clima")
-    public WeatherDto getWeather(@RequestParam("city") String city) {
+    @GetMapping("/weather/{city}")
+    public WeatherDto getWeather(@PathVariable("city") String city) {
       WeatherResponseDto weather = null;
       try {
         weather = weatherService.getWeather(city);

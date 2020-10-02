@@ -37,6 +37,4 @@ public class WeatherService {
         return restTemplate.getForObject(uri, WeatherResponseDto.class);
     }
 
-
-
 }
