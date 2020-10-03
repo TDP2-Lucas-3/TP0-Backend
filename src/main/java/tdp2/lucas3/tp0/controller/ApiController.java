@@ -17,7 +17,7 @@ public class ApiController {
 
     @GetMapping("/weather")
     public WeatherDto getWeather() {
-        WeatherResponseDto weather = weatherService.getWeather();;
+        WeatherResponseDto weather = weatherService.getWeather("Buenos Aires");
         WeatherDto response = new WeatherDto();
         response.setRain(weather.getClouds().getAll());
         response.setTemp(weather.getMain().getTemp());
