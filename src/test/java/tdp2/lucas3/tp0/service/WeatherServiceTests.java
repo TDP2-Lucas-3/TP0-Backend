@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import tdp2.lucas3.tp0.dto.WeatherResponseDto;
+import org.springframework.boot.test.context.SpringBootTest;
+
 
 
 @RunWith(MockitoJUnitRunner.class)
