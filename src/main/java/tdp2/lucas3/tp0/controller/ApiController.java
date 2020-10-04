@@ -38,16 +38,16 @@ public class ApiController {
     @GetMapping("/weather/{city}")
     public WeatherDto getWeather(@PathVariable("city") String city) {
       WeatherResponseDto weather = null;
+      WeatherDto response =  new WeatherDto();
       try {
         weather = weatherService.getWeather(city);
+        response.setRain(weather.getClouds().getAll());
+        response.setTemp(weather.getMain().getTemp());
       } catch (HttpClientErrorException ex) {
-        if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-          throw new ApiRequestException("City not found: "+ city);
-        }
+          if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+              throw new ApiRequestException("City not found: "+ city);
+          }
       }
-      WeatherDto response =  new WeatherDto();
-      response.setRain(weather.getClouds().getAll());
-      response.setTemp(weather.getMain().getTemp());
       return response;
     }
 

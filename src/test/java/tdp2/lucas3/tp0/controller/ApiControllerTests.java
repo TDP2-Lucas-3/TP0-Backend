@@ -3,10 +3,13 @@ package tdp2.lucas3.tp0.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException;
 import tdp2.lucas3.tp0.dto.WeatherDto;
 import tdp2.lucas3.tp0.dto.WeatherResponseDto;
 import tdp2.lucas3.tp0.service.WeatherService;
@@ -24,9 +27,9 @@ import tdp2.lucas3.tp0.exceptions.ApiRequestException;
 
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(ApiController.class)
-class CustomerControllerTest {
-   @Autowired
+@WebMvcTest(controllers = ApiController.class)
+public class ApiControllerTests {
+
    MockMvc mockMvc;
 
    @Autowired
@@ -47,23 +50,28 @@ class CustomerControllerTest {
    String uri = "/weather";
 
    @Before
-   void setup() throws Exception {
-     mendozaResponse = new WeatherResponseDto("50", "17");
-     buenosAiresResponse = new WeatherResponseDto("100", "22");
-     mendozaWeather = new WeatherDto();
-     buenosAiresWeather = new WeatherDto();
+   public void setup() throws Exception {
 
-     mendozaWeather.setRain("50.0");
-     mendozaWeather.setTemp("15.3");
-     buenosAiresWeather.setRain("10.0");
-     buenosAiresWeather.setTemp("17.0");
+       mockMvc = MockMvcBuilders
+               .standaloneSetup(apiController)
+               .build();
+       mendozaResponse = new WeatherResponseDto("50", "17");
+       buenosAiresResponse = new WeatherResponseDto("100", "22");
+       mendozaWeather = new WeatherDto();
+       buenosAiresWeather = new WeatherDto();
 
-     mendozaWeatherJsonString = mapper.writeValueAsString(mendozaWeather);
-     buenosAiresWeatherJsonString = mapper.writeValueAsString(buenosAiresWeather);
+       mapper = new ObjectMapper();
+       mendozaWeather.setRain("50");
+       mendozaWeather.setTemp("17");
+       buenosAiresWeather.setRain("10.0");
+       buenosAiresWeather.setTemp("17.0");
+
+       mendozaWeatherJsonString = mapper.writeValueAsString(mendozaWeather);
+       buenosAiresWeatherJsonString = mapper.writeValueAsString(buenosAiresWeather);
    }
 
    @Test
-   void givenValidArguments_whenGetIsCalled_thenTheRequestShouldBeSuccessful() throws Exception {
+   public void givenValidArguments_whenGetIsCalled_thenTheRequestShouldBeSuccessful() throws Exception {
 
      //given
      uri += "/Mendoza";
@@ -75,23 +83,25 @@ class CustomerControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk());
 
       //Then
-      Mockito.verify(wService).getWeather();
+      Mockito.verify(wService).getWeather("Mendoza");
    }
 
-
+/*
    @Test
-   void givenBadArguments_whenGetCityNotFoundException_thenBadRequest() throws Exception {
+   public void givenBadArguments_whenGetCityNotFoundException_thenBadRequest() throws Exception {
 
      //Given
-     uri += "/Ciudad Falsa";
+     uri += "/CiudadFalsa";
 
      //When
      mockMvc.perform(MockMvcRequestBuilders.get(uri))
             .andExpect(result -> Assert.assertTrue(result.getResolvedException() instanceof ApiRequestException))
-            .andExpect(result -> Assert.assertEquals("City not found: Ciudad Falsa", result.getResolvedException().getMessage()))
+            .andExpect(result -> Assert.assertEquals("City not found: CiudadFalsa", result.getResolvedException().getMessage()))
             .andExpect(MockMvcResultMatchers.status().isNotFound());
 
       //Then
-      Mockito.verify(wService).getWeather();
+      Mockito.verify(wService).getWeather("CiudadFalsa");
    }
+   */
+
 }
